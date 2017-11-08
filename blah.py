@@ -39,8 +39,8 @@ def run(local=False):
     # X_train = np.array(images)
     # y_train = np.array(measurements)
 
-    X_train = np.array(augmented_images)
-    y_train = np.array(augmented_measurements)
+    X_train = np.concatenate(np.array(images), np.array(augmented_images))
+    y_train = np.concatenate(np.array(measurements), np.array(augmented_measurements))
 
     from keras.models import Sequential
     from keras.layers import Flatten, Dense, Lambda
@@ -68,4 +68,4 @@ def run(local=False):
     model.save('model.h5')
 
 if __name__ == '__main__':
-    run(local=True)
+    run(local=False)
