@@ -39,8 +39,8 @@ def run(local=False):
     # X_train = np.array(images)
     # y_train = np.array(measurements)
 
-    X_train = np.concatenate(np.array(images), np.array(augmented_images))
-    y_train = np.concatenate(np.array(measurements), np.array(augmented_measurements))
+    X_train = np.concatenate([images, augmented_images])
+    y_train = np.concatenate([measurements, augmented_measurements])
 
     from keras.models import Sequential
     from keras.layers import Flatten, Dense, Lambda
