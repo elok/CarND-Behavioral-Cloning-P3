@@ -2,12 +2,19 @@ import csv
 import cv2
 import os
 import numpy as np
+from optparse import OptionParser
+from keras.models import Sequential
+from keras.layers import Flatten, Dense, Lambda
+from keras.layers.convolutional import Convolution2D
+from keras.layers.pooling import MaxPooling2D
 
-
-def run(local=False):
-    PATH = '/home/carnd/CarND-Behavioral-Cloning-P3'
-    if local:
-        PATH = '/Users/ericlok/Downloads'
+def run(location):
+    if location == 'home':
+        PATH = r'/Users/ericlok/Downloads'
+    elif location == 'work':
+        PATH = r'C:\Users\elok\Downloads'
+    else:  # AWS
+        PATH = r'/home/carnd/CarND-Behavioral-Cloning-P3'
 
     lines = []
     with open(os.path.join(PATH, 'training_data/driving_log.csv')) as csvfile:
@@ -27,25 +34,19 @@ def run(local=False):
         measurement = float(line[3])
         measurements.append(measurement)
 
-
     # flip
-    augmented_images, augmented_measurements = [], []
-    for image, measurement in zip(images, measurements):
-        augmented_images.append(image)
-        augmented_measurements.append(measurement)
-        augmented_images.append(cv2.flip(image,1))
-        augmented_measurements.append(measurement*-1.0)
+    # augmented_images, augmented_measurements = [], []
+    # for image, measurement in zip(images, measurements):
+    #     augmented_images.append(image)
+    #     augmented_measurements.append(measurement)
+    #     augmented_images.append(cv2.flip(image,1))
+    #     augmented_measurements.append(measurement*-1.0)
 
-    # X_train = np.array(images)
-    # y_train = np.array(measurements)
+    X_train = np.array(images)
+    y_train = np.array(measurements)
 
-    X_train = np.concatenate([images, augmented_images])
-    y_train = np.concatenate([measurements, augmented_measurements])
-
-    from keras.models import Sequential
-    from keras.layers import Flatten, Dense, Lambda
-    from keras.layers.convolutional import Convolution2D
-    from keras.layers.pooling import MaxPooling2D
+    # X_train = np.concatenate([images, augmented_images])
+    # y_train = np.concatenate([measurements, augmented_measurements])
 
     model = Sequential()
     model.add(Lambda(lambda x: (x / 255.0) - 0.5, input_shape=(160, 320, 3)))
@@ -68,4 +69,11 @@ def run(local=False):
     model.save('model.h5')
 
 if __name__ == '__main__':
-    run(local=False)
+    parser = OptionParser(usage="usage: %prog [--location home/work/aws] ", version="%prog 1.0")
+    parser.add_option("-l", "--location",
+                      dest="location",
+                      default='aws',
+                      help="location")
+
+    (options, args) = parser.parse_args()
+    run(location=options.location)
