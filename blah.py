@@ -3,10 +3,7 @@ import cv2
 import os
 import numpy as np
 from optparse import OptionParser
-from keras.models import Sequential
-from keras.layers import Flatten, Dense, Lambda, Cropping2D
-from keras.layers.convolutional import Convolution2D
-from keras.layers.pooling import MaxPooling2D
+
 
 def run(location):
     if location == 'home':
@@ -47,6 +44,11 @@ def run(location):
 
     # X_train = np.concatenate([images, augmented_images])
     # y_train = np.concatenate([measurements, augmented_measurements])
+
+    from keras.models import Sequential
+    from keras.layers import Flatten, Dense, Lambda, Cropping2D
+    from keras.layers.convolutional import Convolution2D
+    from keras.layers.pooling import MaxPooling2D
 
     model = Sequential()
     # Cropping
