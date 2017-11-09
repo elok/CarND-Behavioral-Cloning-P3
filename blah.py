@@ -3,17 +3,14 @@ import cv2
 import os
 import numpy as np
 from optparse import OptionParser
-from keras.models import Sequential
-from keras.layers import Flatten, Dense, Lambda
-from keras.layers.convolutional import Convolution2D
-from keras.layers.pooling import MaxPooling2D
+
 
 def run(location):
     if location == 'home':
         PATH = r'/Users/ericlok/Downloads'
     elif location == 'work':
         PATH = r'C:\Users\elok\Downloads'
-    else:  # AWS
+    else: # AWS
         PATH = r'/home/carnd/CarND-Behavioral-Cloning-P3'
 
     lines = []
@@ -35,18 +32,23 @@ def run(location):
         measurements.append(measurement)
 
     # flip
-    # augmented_images, augmented_measurements = [], []
-    # for image, measurement in zip(images, measurements):
-    #     augmented_images.append(image)
-    #     augmented_measurements.append(measurement)
-    #     augmented_images.append(cv2.flip(image,1))
-    #     augmented_measurements.append(measurement*-1.0)
+    augmented_images, augmented_measurements = [], []
+    for image, measurement in zip(images, measurements):
+        augmented_images.append(image)
+        augmented_measurements.append(measurement)
+        augmented_images.append(cv2.flip(image,1))
+        augmented_measurements.append(measurement*-1.0)
 
-    X_train = np.array(images)
-    y_train = np.array(measurements)
+    # X_train = np.array(images)
+    # y_train = np.array(measurements)
 
-    # X_train = np.concatenate([images, augmented_images])
-    # y_train = np.concatenate([measurements, augmented_measurements])
+    X_train = np.concatenate([images, augmented_images])
+    y_train = np.concatenate([measurements, augmented_measurements])
+
+    from keras.models import Sequential
+    from keras.layers import Flatten, Dense, Lambda
+    from keras.layers.convolutional import Convolution2D
+    from keras.layers.pooling import MaxPooling2D
 
     model = Sequential()
     model.add(Lambda(lambda x: (x / 255.0) - 0.5, input_shape=(160, 320, 3)))
