@@ -3,6 +3,11 @@ import cv2
 import os
 import numpy as np
 from optparse import OptionParser
+from keras.models import Sequential
+from keras.layers import Flatten, Dense, Lambda, Cropping2D, Dropout
+from keras.layers.convolutional import Convolution2D
+# from keras.layers.pooling import MaxPooling2D
+from keras.models import Model
 
 
 def extract_data(data_lines, path):
@@ -77,10 +82,7 @@ def run(location):
     X_train = np.array(images)
     y_train = np.array(steering_angles)
 
-    from keras.models import Sequential
-    from keras.layers import Flatten, Dense, Lambda, Cropping2D, Dropout
-    from keras.layers.convolutional import Convolution2D
-    # from keras.layers.pooling import MaxPooling2D
+
 
     model = Sequential()
     model.add(Lambda(lambda x: x / 255.0 - 0.5, input_shape=(160, 320, 3)))
@@ -88,10 +90,9 @@ def run(location):
     model.add(Convolution2D(24, 5, 5, subsample=(2, 2), activation='relu'))
     model.add(Convolution2D(36, 5, 5, subsample=(2, 2), activation='relu'))
     model.add(Convolution2D(48, 5, 5, subsample=(2, 2), activation='relu'))
-    # model.add(Dropout(0.5))
     model.add(Convolution2D(64, 3, 3, activation='relu'))
     model.add(Convolution2D(64, 3, 3, activation='relu'))
-    # model.add(Dropout(0.5))
+    model.add(Dropout(0.5))
     model.add(Flatten())
     model.add(Dense(100))
     model.add(Dense(50))
