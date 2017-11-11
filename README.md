@@ -1,12 +1,8 @@
 # **Behavioral Cloning**
 
-## Writeup Template
-
-### You can use this file as a template for your writeup if you want to submit it as a markdown file, but feel free to use some other method and submit a pdf if you prefer.
-
 ---
 
-** Behavioral Cloning Project**
+**Behavioral Cloning Project**
 
 The goals / steps of this project are the following:
 * Use the simulator to collect data of good driving behavior
@@ -38,7 +34,7 @@ My project includes the following files:
 * model.py containing the script to create and train the model
 * drive.py for driving the car in autonomous mode
 * model.h5 containing a trained convolution neural network
-* writeup_report.md or writeup_report.pdf summarizing the results
+* README.md summarizing the results
 
 #### 2. Submission includes functional code
 Using the Udacity provided simulator and my drive.py file, the car can be driven autonomously around the track by executing
@@ -56,12 +52,25 @@ The model.py file contains the code for training and saving the convolution neur
 
 My model consists of a convolution neural network with 3x3 filter sizes and depths between 32 and 128 (model.py lines 18-24)
 
+Normalize the data. Input is 160 x 320 with 3 dimensions.
+Crop the top by 70 and bottom by 25. (begin width, end width) (begin height, end height)
+Apply a 5x5 convolution with 24 output filters, 2x2 stride, and relu activation
+Apply a 5x5 convolution with 36 output filters, 2x2 stride, and relu activation
+Apply a 5x5 convolution with 48 output filters, 2x2 stride, and relu activation
+Apply a 3x3 convolution with 64 output filters, and relu activation
+Apply a 3x3 convolution with 64 output filters, and relu activation
+Dropout with probability of 0.5
+Flatten
+Dense 100
+Dense 50
+Dense 10
+Dense 1
+
 The model includes RELU layers to introduce nonlinearity (code line 20), and the data is normalized in the model using a Keras lambda layer (code line 18).
 
 #### 2. Attempts to reduce overfitting in the model
 
 The model contains dropout layers in order to reduce overfitting (model.py lines 21).
-
 The model was trained and validated on different data sets to ensure that the model was not overfitting (code line 10-16). The model was tested by running it through the simulator and ensuring that the vehicle could stay on the track.
 
 #### 3. Model parameter tuning
@@ -104,25 +113,20 @@ Here is a visualization of the architecture (note: visualizing the architecture 
 
 To capture good driving behavior, I first recorded two laps on track one using center lane driving. Here is an example image of center lane driving:
 
-![alt text][image2]
+![alt text][driving_forward]
+
+I then recorded a lap driving backwards on the track using the center lane driving. Here is an example image of driving backwards:
+
+![alt text][driving_backwards]
 
 I then recorded the vehicle recovering from the left side and right sides of the road back to center so that the vehicle would learn to .... These images show what a recovery looks like starting from ... :
 
-![alt text][image3]
-![alt text][image4]
-![alt text][image5]
+![alt text][recovery_left]
+![alt text][recovery_right]
 
-Then I repeated this process on track two in order to get more data points.
-
-To augment the data sat, I also flipped images and angles thinking that this would ... For example, here is an image that has then been flipped:
-
-![alt text][image6]
-![alt text][image7]
-
-Etc ....
+To augment the data set, I also flipped images and angles thinking that this would ...
 
 After the collection process, I had X number of data points. I then preprocessed this data by ...
-
 
 I finally randomly shuffled the data set and put Y% of the data into a validation set.
 
