@@ -9,9 +9,9 @@ from keras.layers.convolutional import Convolution2D
 
 def setup_data(data_lines, path, data_group_folder):
     """
-
-    :param data_lines:
-    :param path:
+    Given the location of the files and driving log raw data, retrieve the images and process them
+    :param data_lines: raw data from the driving log
+    :param path: root path of the images
     :param data_group_folder: training_data, training_data_backwards, training_data_correction
     :return:
     """
@@ -59,10 +59,10 @@ def setup_data(data_lines, path, data_group_folder):
 
 def process_image(path, data_group_folder, file_path):
     """
-
-    :param path:
+    Given the path of the file, apply any necessary conversions to the image data
+    :param path: root path of the image data
     :param data_group_folder: training_data, training_data_backwards, training_data_correction
-    :param file_path:
+    :param file_path: path of the file
     :return:
     """
     filename = file_path.split('/')[-1]
