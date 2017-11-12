@@ -14,13 +14,12 @@ The goals / steps of this project are the following:
 
 [//]: # (Image References)
 
-[image1]: ./examples/placeholder.png "Model Visualization"
-[image2]: ./examples/placeholder.png "Grayscaling"
-[image3]: ./examples/placeholder_small.png "Recovery Image"
-[image4]: ./examples/placeholder_small.png "Recovery Image"
-[image5]: ./examples/placeholder_small.png "Recovery Image"
-[image6]: ./examples/placeholder_small.png "Normal Image"
-[image7]: ./examples/placeholder_small.png "Flipped Image"
+[driving_forward]: ./examples/driving_forward.jpg "driving_forward"
+[driving_backwards]: ./examples/driving_backwards.jpg "driving_backwards"
+[recovery_left]: ./examples/recovery_left.jpg "recovery_left"
+[recovery_right]: ./examples/recovery_right.jpg "recovery_right"
+[driving_forward_left]: ./examples/driving_forward_left.jpg "driving_forward_left"
+[driving_forward_right]: ./examples/driving_forward_right.jpg "driving_forward_right"
 
 ## Rubric Points
 ### Here I will consider the [rubric points](https://review.udacity.com/#!/rubrics/432/view) individually and describe how I addressed each point in my implementation.
@@ -50,21 +49,7 @@ The model.py file contains the code for training and saving the convolution neur
 
 #### 1. An appropriate model architecture has been employed
 
-I used the NVIDIA architecture which consists of the following:
-
-* The image is normalized using a Keras lambda layer (line 121). The input is 160 x 320 with 3 dimensions.
-* The image is then cropped at the top by 70 and bottom by 25 (line 123)
-* Apply a 5x5 convolution with 24 output filters, 2x2 stride, and relu activation (line 125)
-* Apply a 5x5 convolution with 36 output filters, 2x2 stride, and relu activation
-* Apply a 5x5 convolution with 48 output filters, 2x2 stride, and relu activation
-* Apply a 3x3 convolution with 64 output filters, and relu activation
-* Apply a 3x3 convolution with 64 output filters, and relu activation
-* Dropout with probability of 0.5
-* Flatten
-* Dense 100
-* Dense 50
-* Dense 10
-* Dense 1
+I first used the default model from the lesson. After adding in the normalization, augmentation, and extra datasets, the results were not bad but could use some improvement. After reading up some more on the nvdia architecture, I decided to use it and it gave me better results.
 
 #### 2. Attempts to reduce overfitting in the model
 
@@ -91,21 +76,31 @@ My first step was to use a convolution neural network model similar to the NVIDI
 
 In order to gauge how well the model was working, I split my image and steering angle data into a training and validation set. I found that my first model had a low mean squared error on the training set but a high mean squared error on the validation set. This implied that the model was overfitting.
 
-To combat the overfitting, I modified the model so that ...
+To combat the overfitting, I added a dropout layer to the model. 
 
-Then I ...
+Then I flipped the images horizontally and added more data by driving track one backwards.
 
-The final step was to run the simulator to see how well the car was driving around track one. There were a few spots where the vehicle fell off the track... to improve the driving behavior in these cases, I ....
+The final step was to run the simulator to see how well the car was driving around track one. There were a few spots where the vehicle fell off the track. To improve the driving behavior in these cases, I had a "correction" dataset in which I intentionally veered off the track and corrected it by driving it back into the middle. I did this for both the left and right side of the road.
 
 At the end of the process, the vehicle is able to drive autonomously around the track without leaving the road.
 
 #### 2. Final Model Architecture
 
-The final model architecture (model.py lines 18-24) consisted of a convolution neural network with the following layers and layer sizes ...
+I used the NVIDIA architecture which consists of the following:
 
-Here is a visualization of the architecture (note: visualizing the architecture is optional according to the project rubric)
-
-![alt text][image1]
+* The image is normalized using a Keras lambda layer (line 121). The input is 160 x 320 with 3 dimensions.
+* The image is then cropped at the top by 70 and bottom by 25 (line 123)
+* Apply a 5x5 convolution with 24 output filters, 2x2 stride, and relu activation (line 125)
+* Apply a 5x5 convolution with 36 output filters, 2x2 stride, and relu activation
+* Apply a 5x5 convolution with 48 output filters, 2x2 stride, and relu activation
+* Apply a 3x3 convolution with 64 output filters, and relu activation
+* Apply a 3x3 convolution with 64 output filters, and relu activation
+* Dropout with probability of 0.5
+* Flatten
+* Dense 100
+* Dense 50
+* Dense 10
+* Dense 1
 
 #### 3. Creation of the Training Set & Training Process
 
@@ -117,15 +112,15 @@ I then recorded a lap driving backwards on the track using the center lane drivi
 
 ![alt text][driving_backwards]
 
-I then recorded the vehicle recovering from the left side and right sides of the road back to center so that the vehicle would learn to .... These images show what a recovery looks like starting from ... :
+I then recorded the vehicle recovering from the left side and right sides of the road back to center so that the vehicle would learn to steer back into the center on its own. These images show what a recovery looks like starting from the extreme left and right:
 
 ![alt text][recovery_left]
 ![alt text][recovery_right]
 
-To augment the data set, I also flipped images and angles thinking that this would ...
+To augment the data set, I also flipped images horizontally and cropped the upper portion of the images.
 
-After the collection process, I had X number of data points. I then preprocessed this data by ...
+After the collection process, I had 13,068 number of data points. I then preprocessed this data by normalizing it and cropping the upper portion.
 
-I finally randomly shuffled the data set and put Y% of the data into a validation set.
+I finally randomly shuffled the data set and put 20% of the data into a validation set.
 
-I used this training data for training the model. The validation set helped determine if the model was over or under fitting. The ideal number of epochs was Z as evidenced by ... I used an adam optimizer so that manually training the learning rate wasn't necessary.
+I used this training data for training the model. The validation set helped determine if the model was over or under fitting. The ideal number of epochs was 15 as evidenced by the training loss falling below 0.01 I used an adam optimizer so that manually training the learning rate wasn't necessary.
